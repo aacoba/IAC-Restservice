@@ -37,13 +37,13 @@ public class ParkingLocationController {
     }
 
     @RequestMapping(value= "/parkinglocation/{id}/claim", method = POST)
-    public int claimParkingSpotAtLocation(@PathVariable("id") int id) {
+    public ParkingSpot claimParkingSpotAtLocation(@PathVariable("id") int id) {
         ParkingLocation foundLocation = parkingLocationRepository.getParkingLocation(id);
         if (foundLocation == null) {
             throw new ResourceNotFoundException();
         } else {
-            int claimed_spot = foundLocation.claim_available_spot();
-            if (claimed_spot == -1) {
+            ParkingSpot claimed_spot = foundLocation.claimAvailableSpot();
+            if (claimed_spot == null) {
                 throw new NoParkingSpotsAvailableException();
             } else {
                 return claimed_spot;
@@ -52,13 +52,13 @@ public class ParkingLocationController {
     }
 
     @RequestMapping(value= "/parkinglocation/{id}/release/{spotid}", method = POST)
-    public int claimParkingSpotAtLocation(@PathVariable("id") int id, @PathVariable("spotid") int spotid) {
+    public int returnParkingSpotAtLocation(@PathVariable("id") int id, @PathVariable("spotid") int spotid) {
         ParkingLocation foundLocation = parkingLocationRepository.getParkingLocation(id);
         if (foundLocation == null) {
             throw new ResourceNotFoundException();
         } else {
-            foundLocation.return_parking_spot(spotid);
-            System.out.println(foundLocation.get_free_spots());
+            foundLocation.returnParkingSpot(spotid);
+            System.out.println(foundLocation.getFreeSpots());
             return spotid;
         }
     }

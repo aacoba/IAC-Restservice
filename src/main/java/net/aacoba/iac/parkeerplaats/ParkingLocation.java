@@ -22,7 +22,7 @@ public class ParkingLocation {
         return id;
     }
 
-    public int get_free_spots() {
+    public int getFreeSpots() {
         int count = 0;
         for (ParkingSpot ps: parkingSpots ) {
             if (!ps.isUsed()) {
@@ -32,21 +32,31 @@ public class ParkingLocation {
         return count;
     }
 
-    public int get_total_capacity() {
+    public int getTotalCapacity() {
         return parkingSpots.size();
     }
 
-    public synchronized int claim_available_spot()  {
+    public List<Integer> getUsedSpots() {
+        List<Integer> usedSpots = new ArrayList<>();
+        for (ParkingSpot ps : parkingSpots) {
+            if (ps.isUsed()) {
+                usedSpots.add(ps.getId());
+            }
+        }
+        return usedSpots;
+    }
+
+    public synchronized ParkingSpot claimAvailableSpot()  {
         for (ParkingSpot ps: parkingSpots) {
             if (!ps.isUsed()) {
                 ps.setUsed(true);
-                return ps.getId();
+                return ps;
             }
         }
-        return -1;
+        return null;
     }
 
-    public synchronized void return_parking_spot(int id) {
+    public synchronized void returnParkingSpot(int id) {
         for (ParkingSpot ps: parkingSpots) {
             if (ps.getId() == id) {
                 ps.setUsed(false);
